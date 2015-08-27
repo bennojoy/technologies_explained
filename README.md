@@ -1,2 +1,1 @@
-Some technologies expalined (as per my understanding :).
---------------------------------------------------------
+Some technologies explained (as per my understanding :).
