@@ -10,7 +10,7 @@ Mesos is built using the same principles as the Linux kernel, only at a differen
 
 
 
-#An Example
+###An Example
 
 I think an example application would enable us to understand the background concepts a bit more. So let's say we have need an application which calcluates and prints factorial of a 'list' of numbers.
 
@@ -47,11 +47,11 @@ Now lets have a look at the application run itself.
 - Then when the fist result is printed the application grabs the second number from the list and passes it on to the factorial function and so on.
 
 
-# Serial processing
+### Serial processing
 
 The processing of these factorials are serial and can take significant time if there are millions of number to be calculated. So what can we do to speed things up.
 
-# Parallel Processing
+### Parallel Processing
 
  we know that a process needs a cpu to run, now lets assume we have a 4 cpu/core machine, what if we could have 4 copies of this application and each get 1/4th of the list. 
 That is defnietly possible we could rewrite the application in such a way that it spawns threads/copies equal to the number of copus it has and give each copy the shared number to cruch. This is very widely used in current applications and lets call this 'Parallel Processing'.
