@@ -67,7 +67,7 @@ If we look at our first factorial program we see that inorder to run it the os k
    
 #### Architecture.
 
-![Alt text](/mesos_ansible/images/mesos_arch.png "Arch")
+![Alt text](/mesos/mesos_ansible/images/mesos_arch.png "Arch")
 
 
 
