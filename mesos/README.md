@@ -75,6 +75,7 @@ If we look at our first factorial program we see that inorder to run it the os k
 
 The Apache Mesos itself  consists of the Mesos Master and Mesos slave processes and the applications that use mesos to run on the clsuter are called as Frameworks.
 
+
 ####Mesos Master: 
 
 The master is a process which runs on a node in the cluster and orchestrates the running of tasks on slaves by receiving resource offers(cpu/mem/port/disk) from slaves and offering those resources to registered frameworks(Factorial).
@@ -84,6 +85,8 @@ The master is a process which runs on a node in the cluster and orchestrates the
 The slave is a process which runs on a node in the cluster and offers up resources available on that node to the Mesos Master. The slave also takes schedule requests from the master and invokes an executor to launch a task (factorial function).
 
 ###FrameWorks.
+--------------
+
 
 Inorder for our factorial program to work in a distributed way we would have to split the application into two components and lets call this two components combined as 'factorial framework' so that we are inline with the Mesos terminology.
 
@@ -259,6 +262,10 @@ class FactorialScheduler(mesos.interface.Scheduler):
             driver.acknowledgeStatusUpdate(update)
 
 ```
+
+
+
+
 
 
 
