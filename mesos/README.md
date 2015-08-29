@@ -60,12 +60,15 @@ That is defnietly possible and  we could rewrite the application in such a way t
 
 Now lets assume we have a datacenter with 100 machines and each machine having 4 cores and most of the times these cpu's are used on 10%. What if we could spawn our factorial application for each of this cpu across all our servers/nodes ? That would be awesome we would reduce the time to caclulate drastically and if we want to scale just add more servers to the datacenter. This is exactly what Apache Mesos allows us to do.
 
-### Apache Mesos
+### Apache Mesos (Distributed OS)
+---------------------------------
 
 If we look at our first factorial program we see that inorder to run it the os kernel does stuffs like allocating cpu/memory etc..with Mesos we dont have a single server to run our application instead the whole datacenter acts as one server and mesos handles sceduling cpu/memory/disks/ports etc... for our application, apart from scheduling mesos also has capabilitiies like fault tolerance, resouce isolation etc...
 
    
-#### Architecture.
+#### Architecture:
+------------------
+
 
 ![Alt text](/mesos/mesos_ansible/images/mesos_arch.png "Arch")
 
@@ -90,7 +93,7 @@ The Apache Mesos itself  consists of the Mesos Master and Mesos slave processes 
 
 Inorder for our factorial program to work in a distributed way we would have to split the application into two components and lets call this two components combined as 'factorial framework' so that we are inline with the Mesos terminology.
 
-####Scheduler 
+####Scheduler: 
 
 The first part of the factorial framework would be the schedular, The schedular handles many fuctions like 
 
@@ -270,7 +273,7 @@ class FactorialScheduler(mesos.interface.Scheduler):
 
 
 
-####Executor
+####Executor:
 
 Executor is where we implement the factorial logic and also handle things like launching the task, updating the status of this execution to the schedular and also communication with the schedular.
 
