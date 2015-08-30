@@ -389,22 +389,3 @@ class FactorialExecutor(mesos.interface.Executor):
 ```
 
 
-
-###Step by Step look at Factorial framework execution.
-------------------------------------------------------
-
-Lets have a look at what happens at background when we execute our Factorial framework.
-
-- The user executes the framework via $factorial_scheduler
-- The factorial scheduler registers itself with the mesos master
-- The mesos master sends out offers to our framwork
-- The factorial scheduler creates a task per number in the factorial list with one cpu and 10mb of ram as resource requirement and  the task data has the number for which factorial should be calclulated.
-- The mesos send the tasks out to the slave for execution
-- The mesos slave invokes the factorial executor in a Mesos container (for isolation)
-- The executor sends out a status update to scheduler stating that the process has started.
-- Executor Reads the data from the task and caclulates the factorial
-- Executor sends the update that task has finished and populates the update's data field with the factorial.
-- The scheduler prints the factorial.
-- The scheduler also check if all tasks has finished, if so stop the scheduler.
-
- 
