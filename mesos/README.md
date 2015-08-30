@@ -1,5 +1,5 @@
 ## Apache Mesos
-
+----------------
 
 
 What is Mesos? (As in the mesos website)
@@ -11,6 +11,8 @@ Mesos is built using the same principles as the Linux kernel, only at a differen
 
 
 ###An Example
+-------------
+
 
 I think an example application would enable us to understand the background concepts a bit more. So let's say we have need an application which calcluates and prints factorial of a 'list' of numbers.
 
@@ -48,6 +50,8 @@ Now lets have a look at the application run itself.
 
 
 ### Serial processing
+---------------------
+
 
 The processing of these factorials are serial and can take significant time if there are millions of number to be calculated. So what can we do to speed things up.
 
@@ -57,6 +61,7 @@ The processing of these factorials are serial and can take significant time if t
 That is defnietly possible and  we could rewrite the application in such a way that it spawns threads/copies equal to the number of cpu's it has and give each copy a share of the numbers to cruch. This is very widely used in current applications.
 
 ### Distributed Processing.
+---------------------------
 
 Now lets assume we have a datacenter with 100 machines and each machine having 4 cores and most of the times these cpu's are used on 10%. What if we could spawn our factorial application for each of this cpu across all our servers/nodes ? That would be awesome we would reduce the time to caclulate drastically and if we want to scale just add more servers to the datacenter. This is exactly what Apache Mesos allows us to do.
 
@@ -117,7 +122,8 @@ The first part of the factorial framework would be the scheduler, The scheduler 
 
 ```
 
-Executor is where we implement the factorial logic and also handle things like launching the task, updating the status of this execution to the scheduler and also communication with the scheduler.
+Executor is where we implement the factorial logic and also handle things like launching the task, updating the status of this 
+execution to the scheduler and also communication with the scheduler.
 
 ```
 
