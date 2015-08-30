@@ -81,11 +81,13 @@ The Apache Mesos itself  consists of the Mesos Master and Mesos slave processes 
 
 ####Mesos Master: 
 
-    The master is a process which runs on a node in the cluster and orchestrates the running of tasks on slaves by receiving resource offers(cpu/mem/port/disk) from slaves and offering those resources to registered frameworks(Factorial).
+    The master is a process which runs on a node in the cluster and orchestrates the running of tasks on slaves by receiving 
+resource offers(cpu/mem/port/disk) from slaves and offering those resources to registered frameworks(Factorial).
 
 ####Mesos Slave  
 
-    The slave is a process which runs on a node in the cluster and offers up resources available on that node to the Mesos Master. The slave also takes schedule requests from the master and invokes an executor to launch a task (factorial function).
+    The slave is a process which runs on a node in the cluster and offers up resources available on that node to the Mesos Master
+The slave also takes schedule requests from the master and invokes an executor to launch a task (factorial function).
 
 ###FrameWorks.
 --------------
@@ -95,14 +97,52 @@ Inorder for our factorial program to work in a distributed way we would have to 
 
 ####Scheduler: 
 
-The first part of the factorial framework would be the schedular, The schedular handles many fuctions like 
+The first part of the factorial framework would be the scheduler, The scheduler handles many fuctions like 
 
     - Interface to get the list of numbers for which factorial should be calculated.
     - Accept/Reject offers(cpu/mem)  from the mesos master.
     - Prepare the tasks with required cpu/mem for the executors to execute.
     - Handle failures of tasks in executors etc..
 
-Lets look at some code snippets and explanation of how the schedular would be implemented. We use python as the framework langugage.
+
+####Executor:
+
+Executor is where we implement the factorial logic and also handle things like launching the task, updating the status of this execution to the scheduler and also communication with the scheduler.
+
+
+
+
+
+###Step by Step look at Factorial framework execution.
+------------------------------------------------------
+
+![Alt text](/mesos/mesos_ansible/images/mesos_exec.jpg "Exec")
+
+
+
+Lets have a look at what happens at background when we execute our Factorial framework.
+
+- The user executes the framework via $factorial_scheduler
+- The factorial scheduler registers itself with the mesos master
+- The mesos master sends out offers to our framwork (offers are based on reported free cpus/mem etc... from mesos slaves)
+- The factorial scheduler creates a task per number in the factorial list with one cpu and 10mb of ram as resource requirement and  the task data has the number for which factorial should be calclulated.
+- The mesos send the tasks out to the slave for execution
+- The mesos slave invokes the factorial executor in a Mesos container (for isolation)
+- The executor sends out a status update to scheduler stating that the process has started.
+- Executor Reads the data from the task and caclulates the factorial
+- Executor sends the update that task has finished and populates the update's data field with the factorial.
+- The scheduler prints the factorial.
+- The scheduler also check if all tasks has finished, if so stop the scheduler.
+
+ 
+
+
+
+##Code
+
+Lets look at some code snippets and explanation of how the scheduler would be implemented. We use python as the framework langugage.
+
+####Scheduler
 
 
 ```
@@ -125,7 +165,7 @@ if __name__ == "__main__":
     framework.user = "" # Have Mesos fill in the current user.
     framework.name = "Factorial Framework (Python)"
 
-#Fill up connection details  to the mesos master and tell which is our schedular implementation class 'FactorialScheduler'.
+#Fill up connection details  to the mesos master and tell which is our scheduler implementation class 'FactorialScheduler'.
     driver = mesos.native.MesosSchedulerDriver(
             FactorialScheduler(implicitAcknowledgements, executor),
             framework,
@@ -142,7 +182,7 @@ if __name__ == "__main__":
 
 
 #
-#The actual implementation of the factorial schedular, which implements the schedular interface
+#The actual implementation of the factorial scheduler, which implements the scheduler interface
 # 
 
 #Initializing some variables we would be using.
@@ -270,12 +310,9 @@ class FactorialScheduler(mesos.interface.Scheduler):
 
 
 
+####Executor
 
 
-
-####Executor:
-
-Executor is where we implement the factorial logic and also handle things like launching the task, updating the status of this execution to the schedular and also communication with the schedular.
 
 Lets have a look at the code snippets of the factorial executor.
 
@@ -304,7 +341,7 @@ class FactorialExecutor(mesos.interface.Executor):
         def run_task():
             print "Running task %s" % task.task_id.value
 
-#Update our factorial schedular that the task is started. In the factorial:Schedular code statusUpdate(self, driver, update) fucntion is invoked. 
+#Update our factorial scheduler that the task is started. In the factorial:Schedular code statusUpdate(self, driver, update) fucntion is invoked. 
             update = mesos_pb2.TaskStatus()
             update.task_id.value = task.task_id.value
             update.data = task.data
@@ -318,7 +355,7 @@ class FactorialExecutor(mesos.interface.Executor):
 
             print "Sending status update..."
 
-#Finished now let us update the schedular with the result
+#Finished now let us update the scheduler with the result
 
             update = mesos_pb2.TaskStatus()
             update.task_id.value = task.task_id.value
@@ -333,3 +370,24 @@ class FactorialExecutor(mesos.interface.Executor):
 
 
 ```
+
+
+
+###Step by Step look at Factorial framework execution.
+------------------------------------------------------
+
+Lets have a look at what happens at background when we execute our Factorial framework.
+
+- The user executes the framework via $factorial_scheduler
+- The factorial scheduler registers itself with the mesos master
+- The mesos master sends out offers to our framwork
+- The factorial scheduler creates a task per number in the factorial list with one cpu and 10mb of ram as resource requirement and  the task data has the number for which factorial should be calclulated.
+- The mesos send the tasks out to the slave for execution
+- The mesos slave invokes the factorial executor in a Mesos container (for isolation)
+- The executor sends out a status update to scheduler stating that the process has started.
+- Executor Reads the data from the task and caclulates the factorial
+- Executor sends the update that task has finished and populates the update's data field with the factorial.
+- The scheduler prints the factorial.
+- The scheduler also check if all tasks has finished, if so stop the scheduler.
+
+ 
