@@ -81,13 +81,21 @@ The Apache Mesos itself  consists of the Mesos Master and Mesos slave processes 
 
 ####Mesos Master: 
 
-    The master is a process which runs on a node in the cluster and orchestrates the running of tasks on slaves by receiving 
+```
+
+The master is a process which runs on a node in the cluster and orchestrates the running of tasks on slaves by receiving 
 resource offers(cpu/mem/port/disk) from slaves and offering those resources to registered frameworks(Factorial).
+
+```
 
 ####Mesos Slave  
 
-    The slave is a process which runs on a node in the cluster and offers up resources available on that node to the Mesos Master
+```
+
+The slave is a process which runs on a node in the cluster and offers up resources available on that node to the Mesos Master
 The slave also takes schedule requests from the master and invokes an executor to launch a task (factorial function).
+
+```
 
 ###FrameWorks.
 --------------
@@ -107,8 +115,11 @@ The first part of the factorial framework would be the scheduler, The scheduler 
 
 ####Executor:
 
+```
+
 Executor is where we implement the factorial logic and also handle things like launching the task, updating the status of this execution to the scheduler and also communication with the scheduler.
 
+```
 
 
 
@@ -120,7 +131,11 @@ Executor is where we implement the factorial logic and also handle things like l
 
 
 
+
+
 Lets have a look at what happens at background when we execute our Factorial framework.
+
+```
 
 - The user executes the framework via $factorial_scheduler
 - The factorial scheduler registers itself with the mesos master
@@ -135,6 +150,8 @@ Lets have a look at what happens at background when we execute our Factorial fra
 - The scheduler also check if all tasks has finished, if so stop the scheduler.
 
  
+```
+
 
 
 
