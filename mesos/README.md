@@ -394,4 +394,12 @@ class FactorialExecutor(mesos.interface.Executor):
 
 ```
 
+##Other Frameworks.
+-------------------
 
+
+There are lots of frameworks alread available so that we dont have to write everything from scratch. Like 'chronos' which is like cron, Aurora/marathon for long running jobs similar to sytemd etc... . Below link will have a more complete list.
+
+http://mesos.apache.org/documentation/latest/mesos-frameworks/
+
+ 
