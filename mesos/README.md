@@ -402,4 +402,7 @@ There are lots of frameworks alread available so that we dont have to write ever
 
 http://mesos.apache.org/documentation/latest/mesos-frameworks/
 
- 
+##Try Out
+---------
+
+There are playbooks to deploy mesos cluster and this factorial framework in mesos_ansible/mesos_non_ha which you can try.  
