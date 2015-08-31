@@ -1,0 +1,14 @@
+#The region where the instances should be created
+ec2_region: us-east-1
+
+#The vpc and and subnet where the instances should be created.
+vpc_id: vpc-7caf5119
+vpc_subnet_id: subnet-983026ec
+
+
+keypair: benkey
+instance_type: t1.micro
+image_id:  ami-8997afe0
+
+#The number if slave instances required.
+mesos_slave_count: 2

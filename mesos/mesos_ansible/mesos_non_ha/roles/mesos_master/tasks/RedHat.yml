@@ -1,0 +1,23 @@
+---
+
+- name: Install the mesos repo on rhel disributions
+  yum: name={{ mesos_master_repo[ansible_os_family][ansible_distribution_major_version] }}
+
+- name: Install mesos and required packages
+  yum: name={{ item }}
+  with_items:
+    - libselinux-python
+    - mesos
+
+- name: Place the mesos master configuration file
+  template: src=mesos-master.j2 dest=/etc/default/mesos-master
+
+- name: place the factorial schedular application
+  template: src=factorial_scheduler.j2 dest=/usr/bin/factorial_scheduler mode=0755 owner=root group=root
+
+- name: stop iptables
+  service: name=iptables state=stopped enabled=no
+
+- name: start the mesos master services
+  service: name=mesos-master state=started
+

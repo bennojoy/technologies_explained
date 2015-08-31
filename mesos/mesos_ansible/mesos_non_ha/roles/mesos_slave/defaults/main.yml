@@ -1,0 +1,4 @@
+mesos_master_repo: 
+    RedHat:
+      "6" : http://repos.mesosphere.com/el/6/noarch/RPMS/mesosphere-el-repo-6-2.noarch.rpm
+mesos_master_port: 5050

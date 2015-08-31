@@ -1,0 +1,97 @@
+- hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+   - name: Create the security group for mesos cluster
+     ec2_group:
+       name: "mesos_group"
+       description: "Secutiry group for mesos"
+       vpc_id: "{{ vpc_id }}"
+       region: "{{ ec2_region | default('us-east-1') }}"
+       rules: 
+        - proto: tcp
+          from_port: 5050
+          to_port: 5050
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 5051
+          to_port: 5051
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 22
+          to_port: 22
+          cidr_ip: 0.0.0.0/0
+
+   - name: Create the Mesos Master Instance
+     ec2:
+      region: "{{ ec2_region }}"
+      keypair: "{{ keypair }}"
+      assign_public_ip: true
+      instance_type: "{{ instance_type }}"
+      image: "{{ image_id }}"
+      wait: true
+      vpc_subnet_id: "{{ vpc_subnet_id }}"
+      instance_tags:
+        Name: "Mesos_Master"
+      exact_count: 1
+      count_tag:
+        Name: "Mesos_Master"
+      group: "mesos_group"
+     register: mesos_master
+
+
+   - name: Create the Mesos Slave Instances
+     ec2:
+      region: "{{ ec2_region }}"
+      keypair: "{{ keypair }}"
+      assign_public_ip: true
+      vpc_subnet_id: "{{ vpc_subnet_id }}"
+      instance_type: "{{ instance_type }}"
+      image: "{{ image_id }}"
+      wait: true
+      instance_tags:
+        Name: "Mesos_Slave"
+      exact_count: "{{ mesos_slave_count }}"
+      count_tag:
+        Name: "Mesos_Slave"
+      group: "mesos_group"
+     register: mesos_slave
+
+
+   - name: Wait for SSH
+     wait_for:
+      host: '{{ item.public_dns_name }}'
+      port: 22
+      delay: 10
+      timeout: 320
+      state: started
+     with_items: mesos_slave.tagged_instances
+
+   - name: Add  mesos slave master to a temporary inventory group
+     add_host:
+      name: '{{ mesos_master.tagged_instances[0].public_ip }}'
+      groups: mesos_master
+      ansible_ssh_user: 'root'
+   
+   - name: Add  mesos slave hosts to a temporary inventory group
+     add_host:
+      name: "{{ item.public_ip }}"
+      groups: mesos_slaves
+      ansible_ssh_user: 'root'
+     with_items: mesos_slave.tagged_instances
+
+    
+- hosts: mesos_master
+  roles:
+   - mesos_master 
+
+- hosts: mesos_slaves
+  roles:
+   - mesos_slave
+
+- hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: The Mesos Master is avaible in 
+      debug: var=mesos_master.tagged_instances[0].public_ip
