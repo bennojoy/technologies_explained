@@ -33,7 +33,6 @@ childFunc(void *arg)
     char *mount_point = "/proc";
 
     if (mount_point != NULL) {
-        mkdir(mount_point, 0555);       /* Create directory for mount point */
         if (mount("proc", mount_point, "proc", 0, NULL) == -1)
             errExit("mount");
         printf("Mounting procfs at %s\n", mount_point);
