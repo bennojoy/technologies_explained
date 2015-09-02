@@ -63,4 +63,9 @@ To illustrate this lets a look at some command outputs on a regular bash shell a
 ------------------------------
 
 ![Alt text](/containers/images/container_cont.png "Cont")  
-      
+     
+
+####Process Isolation
+---------------------
+
+If we look the normal bash shell output of the command 'pstree -p' we can see that  
