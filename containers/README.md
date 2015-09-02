@@ -133,5 +133,32 @@ Other isolations like hostname (UTS), ipc etc.. work pretty much the same way by
 
 
 
+###Attaching to a Namespace.
+---------------------------
 
+Many times we would like to attach to a namespace and do something, for example if instead of a shell we had started a process wiht no way to interact and we wanted to start a new process in the same namespace then we can attach a new shell(process) to an existing namespace, this is usually done via the 'setns' system call and it takes the file discriptor number of the new namepace as an argument.
+so for exameple if we want to know what is the namespace id of our container bash we can execute the command.
 
+```
+
+[root@ip-172-31-26-128 containers]# readlink /proc/12026/ns/pid 
+pid:[4026532287]  
+
+```
+
+where 12026 is the process id of out child process form the parent process namespace.
+
+we also have a userland application 'nsenter' which can do this for example:
+
+    nsenter -t 12026 
+
+would attach our existing shell to the namespace to which process 12026 belongs (does this by reading the /proc/12026/ns files)
+
+### Conclusion
+--------------
+
+Hope this give an overview of containers, this can be considered as an application container, this can be extended to make isolated linux os container by adding in 'chroot, pivot_root, overlayfs etc..'.
+
+Also we can rstrict the container to a certian percentage of system resources like cpu, memory etc.. using cgroups.
+
+ 
