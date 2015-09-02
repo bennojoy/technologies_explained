@@ -51,12 +51,16 @@ All the above stated problems are solved by namespaces, Lets see how it is done 
 
 To illustrate this lets a look at some command outputs on a regular bash shell and a isolated/containerized bash shell:
 
-Normal Bash shell:
+####Normal Bash shell:
+-----------------------
+
 
 ![Alt text](/containers/images/container_host.png "Arch")  
   
 
-Containerized  Bash shell:
+
+####Containerized  Bash shell:
+------------------------------
 
 ![Alt text](/containers/images/container_cont.png "Cont")  
       
